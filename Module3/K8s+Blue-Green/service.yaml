@@ -7,7 +7,7 @@ spec:
   type: NodePort
   selector:
     app: example-app
-    env: green   # 👈 aquí empiezas apuntando a GREEN
+    env: green   # 👈 aquí empiezas apuntando a BLUE
   ports:
   - port: 80
     targetPort: 80

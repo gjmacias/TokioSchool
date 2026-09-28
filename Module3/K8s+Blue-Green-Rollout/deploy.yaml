@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: app
   namespace: rollout
+  annotations:
+    kubernetes.io/change-cause: "kubectl apply -f deploy.yaml - cambio a nginx"
 spec:
   revisionHistoryLimit: 100
 
