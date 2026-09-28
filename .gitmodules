@@ -1,3 +1,6 @@
-[submodule "Module3/Module3/Django-CI"]
-	path = Module3/Module3/Django-CI
+[submodule "Module3/Django-CI"]
+	path = Module3/Django-CI
 	url = https://github.com/gjmacias/Django-CI
+[submodule "Module3/Maven-CI"]
+	path = Module3/Maven-CI
+	url = https://github.com/gjmacias/Maven-CI
