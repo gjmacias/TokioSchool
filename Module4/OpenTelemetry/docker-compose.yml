@@ -1,0 +1,49 @@
+services:
+
+  app:
+    build:      ./app
+    restart:    always
+    ports:      ["8080:8080"]
+    depends_on: [otel-collector]
+
+  otel-collector:
+    image:       otel/opentelemetry-collector-contrib
+    command:    ["--config=/etc/otelcol/config.yaml"]
+    restart:    always
+    ports:      ["4317:4317", "4318:4318", "8889:8889"]
+    volumes:
+      - ./config/otel/collector.yaml:/etc/otelcol/config.yaml
+    depends_on: [jaeger, prometheus, loki]
+
+  jaeger:
+    image:        jaegertracing/all-in-one:latest
+    restart:      always
+    ports:        ["16686:16686"]
+    environment:  [COLLECTOR_OTLP_ENABLED=true]
+
+  prometheus:
+    image:        prom/prometheus
+    restart:      always  
+    ports:        ["9090:9090"]
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  loki:
+    image:        grafana/loki
+    restart:      always
+    ports:        ["3100:3100"]
+    command:
+      - "-config.file=/etc/loki/local-config.yaml"
+    volumes:
+      - ./config/loki/loki-config.yaml:/etc/loki/local-config.yaml
+
+  grafana:
+    image:        grafana/grafana
+    restart:      always  
+    ports:        ["3000:3000"]
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    depends_on:   [jaeger, prometheus, loki]
